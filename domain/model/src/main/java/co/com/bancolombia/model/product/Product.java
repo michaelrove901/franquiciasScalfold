@@ -1,17 +1,14 @@
 package co.com.bancolombia.model.product;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-//import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 
 @Getter
 @Setter
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Product {
-    private String id;
+    private Long id;
     private String name;
     private int stock;
 }

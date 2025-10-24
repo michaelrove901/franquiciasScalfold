@@ -1,17 +1,19 @@
 package co.com.bancolombia.model.branch;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-//import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import co.com.bancolombia.model.product.Product;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Branch {
-    private String id;
+    private Long id;
     private String name;
+    @Builder.Default
     private List<Product> products = new ArrayList<>();
 }

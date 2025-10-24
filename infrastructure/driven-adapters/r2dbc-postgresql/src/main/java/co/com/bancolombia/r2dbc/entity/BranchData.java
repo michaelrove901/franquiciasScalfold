@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("branches")
 public class BranchData {
     @Id
-    private String id;
+    private Long id;
     private String name;
     private Long franchiseId;
 }

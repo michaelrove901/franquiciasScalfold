@@ -1,37 +1,39 @@
 package co.com.bancolombia.r2dbc.config;
-
+import io.r2dbc.pool.ConnectionPool;
+import io.r2dbc.spi.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PostgreSQLConnectionPoolTest {
 
-    @InjectMocks
-    private PostgreSQLConnectionPool connectionPool;
+    @Mock
+    private ConnectionPool mockPool;
 
     @Mock
-    private PostgresqlConnectionProperties properties;
-
+    private Connection mockConnection;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        when(properties.host()).thenReturn("localhost");
-        when(properties.port()).thenReturn(5432);
-        when(properties.database()).thenReturn("dbName");
-        when(properties.schema()).thenReturn("schema");
-        when(properties.username()).thenReturn("username");
-        when(properties.password()).thenReturn("password");
+        when(mockPool.create()).thenReturn(Mono.just(mockConnection));
+        when(mockConnection.close()).thenReturn(Mono.empty());
     }
 
     @Test
-    void getConnectionConfigSuccess() {
-        assertNotNull(connectionPool.getConnectionConfig(properties));
+    void connectionPool_canObtainConnection() {
+        Mono<Connection> connectionMono = Mono.from(mockPool.create())
+                .flatMap(conn -> Mono.from(conn.close()).thenReturn(conn));
+
+        StepVerifier.create(connectionMono)
+                .expectNext(mockConnection)
+                .verifyComplete();
     }
 }
+

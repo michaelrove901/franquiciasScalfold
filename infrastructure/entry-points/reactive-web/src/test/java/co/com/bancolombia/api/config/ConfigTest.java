@@ -1,17 +1,20 @@
 package co.com.bancolombia.api.config;
 
-import co.com.bancolombia.api.Handler;
+import co.com.bancolombia.api.HandlerRest;
 import co.com.bancolombia.api.RouterRest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.function.server.RouterFunctions;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
 @WebFluxTest
-@Import({CorsConfig.class, SecurityHeadersConfig.class})
+@Import({CorsConfig.class, SecurityHeadersConfig.class, ConfigTest.RouterTestConfig.class})
 class ConfigTest {
 
     @Autowired
@@ -20,7 +23,7 @@ class ConfigTest {
     @Test
     void corsConfigurationShouldAllowOrigins() {
         webTestClient.get()
-                .uri("/api/usecase/path")
+                .uri("/api/test-cors")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-Security-Policy",
@@ -33,4 +36,17 @@ class ConfigTest {
                 .expectHeader().valueEquals("Referrer-Policy", "strict-origin-when-cross-origin");
     }
 
+    /**
+     * Configuración mínima para exponer un endpoint dummy
+     * usado solo para probar CORS y headers de seguridad.
+     */
+    @Configuration
+    static class RouterTestConfig {
+        @Bean
+        public RouterFunction<ServerResponse> testRoute() {
+            return RouterFunctions.route()
+                    .GET("/api/test-cors", request -> ServerResponse.ok().build())
+                    .build();
+        }
+    }
 }

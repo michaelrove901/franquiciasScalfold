@@ -9,8 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ProductData {
     @Id
     private Long id;
-    private String productId;
     private String name;
     private Integer stock;
-    private String branchId;
+    private Long branchId;
 }

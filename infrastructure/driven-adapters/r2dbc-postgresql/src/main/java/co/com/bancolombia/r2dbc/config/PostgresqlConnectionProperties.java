@@ -1,14 +1,19 @@
 package co.com.bancolombia.r2dbc.config;
 
-// TODO: Load properties from the application.yaml file or from secrets manager
-// import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "spring.r2dbc")
+public class PostgresqlConnectionProperties {
 
-// @ConfigurationProperties(prefix = "adapters.r2dbc")
-public record PostgresqlConnectionProperties(
-        String host,
-        Integer port,
-        String database,
-        String schema,
-        String username,
-        String password) {
+    private String host;
+    private Integer port;
+    private String database;
+    private String username;
+    private String password;
+    private String schema;
+
+
 }
