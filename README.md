@@ -71,7 +71,7 @@ git clone https://github.com/michaelrove901/franquiciasScalfold cd franquiciasSc
 
 Configurar las variables en application-local.yml (usuario, contraseña, puerto DB)
 
-Compilar y ejecutar:
+Compilar y ejecutar Poner en variable local :
 
 gradle clean build gradle bootRun
 
@@ -98,7 +98,7 @@ http://localhost:8080
 
 ☁️ Despliegue en Producción
 
-En ambiente productivo se utiliza Amazon RDS PostgreSQL, el cual se encuentra apagado por costos En caso de pruebas, avisar para habilitar la instancia temporalmente
+En ambiente productivo se utiliza Amazon RDS PostgreSQL, el cual se encuentra apagado por costos En caso de pruebas, avisar para habilitar la instancia temporalmente se debe cambiar el enviroment a prod
 
 # Consideraciones de Diseño
 
