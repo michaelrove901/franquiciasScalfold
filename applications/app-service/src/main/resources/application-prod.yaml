@@ -1,0 +1,8 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://franchise-instance-1.cyna20giicbd.us-east-1.rds.amazonaws.com:5432/franchise
+    username: postgres
+    password: Wv6D3Ft5wk1tNFq2YHqL
+  sql:
+    init:
+      mode: never

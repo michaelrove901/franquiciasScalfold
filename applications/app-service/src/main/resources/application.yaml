@@ -1,27 +1,12 @@
 spring:
-  r2dbc:
-    host: localhost
-    port: 5432
-    database: franchise
-    schema: public
-    username: postgres
-    password: 1234
-    initialization-mode: never
-  sql:
-    init:
-      mode: always
   application:
     name: "ScaffoldQuickStart"
-  devtools:
-    add-properties: false
-  h2:
-    console:
-      enabled: true
-      path: "/h2"
   profiles:
-    include: null
+    active: local
+
 server:
   port: 8080
+
 management:
   endpoints:
     web:
@@ -31,5 +16,6 @@ management:
     health:
       probes:
         enabled: true
+
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"

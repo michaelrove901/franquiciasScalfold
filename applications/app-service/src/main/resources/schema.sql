@@ -1,15 +1,13 @@
--- Borrar tablas si existen (solo para pruebas)
+
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS branches;
 DROP TABLE IF EXISTS franchises;
 
--- Tabla de franquicias
 CREATE TABLE franchises (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
--- Tabla de sucursales
 CREATE TABLE branches (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -19,7 +17,6 @@ CREATE TABLE branches (
         ON DELETE CASCADE
 );
 
--- Tabla de productos
 CREATE TABLE products (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,

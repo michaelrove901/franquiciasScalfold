@@ -1,0 +1,13 @@
+spring:
+  r2dbc:
+    host: localhost
+    port: 5432
+    database: franchise
+    username: postgres
+    password: 1234
+    schema: public
+  sql:
+    init:
+      mode: always
+  flyway:
+    enabled: true
