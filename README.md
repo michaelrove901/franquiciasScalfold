@@ -100,7 +100,8 @@ http://localhost:8080
 
 En ambiente productivo se utiliza Amazon RDS PostgreSQL, el cual se encuentra apagado por costos En caso de pruebas, avisar para habilitar la instancia temporalmente
 
-Consideraciones de Diseño
+# Consideraciones de Diseño
+
 Durante el desarrollo de este proyecto utilize una Arquitectura Hexagonal gracias al scalfold de bancolombia con el fin de mantener una clara separación de responsabilidades entre las capas de dominio, aplicación e infraestructura gracias a esto facilitamos la mantenibilidad del código y permite reemplazar componentes sin afectar la lógica de negocio
 
 Se priorizó el uso de programación reactiva para garantizar una aplicación eficiente, escalable y no bloqueante, aprovechando las capacidades de Spring WebFlux para la construcción de APIs reactivas
