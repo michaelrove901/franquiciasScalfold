@@ -1,47 +1,113 @@
-# Proyecto Base Implementando Clean Architecture
+Proyecto Base Implementando Clean Architecture
+Este proyecto implementa una API RESTfull reactivo en Java 21 con Spring Boot WebFlux, siguiendo los principios de Arquitectura Hexagonal (Clean Architecture) propuestos por Bancolombia. El objetivo es construir un servicio que gestione una lista de franquicias, sus sucursales y los productos que ofrece cada una
 
-## Antes de Iniciar
+Para el desarrollo de esta prueba tecnica se utilizaron los siguientes programas
+JAVA Version 21
 
-Empezaremos por explicar los diferentes componentes del proyectos y partiremos de los componentes externos, continuando con los componentes core de negocio (dominio) y por último el inicio y configuración de la aplicación.
+Gradle Version 9.1.0
 
-Lee el artículo [Clean Architecture — Aislando los detalles](https://medium.com/bancolombia-tech/clean-architecture-aislando-los-detalles-4f9530f35d7a)
+Docker Desktop
 
-# Arquitectura
+PostgreSQL Version 17.5 Para Ambiente local
 
-![Clean Architecture](https://miro.medium.com/max/1400/1*ZdlHz8B0-qu9Y-QO3AXR_w.png)
+Amazon RDS PostgreSQL Ambiente prod (Lo tengo apagado por temas de costos me avisan y levanto el servicio para probarlo)
 
-## Domain
+JUnit & Mockito
 
-Es el módulo más interno de la arquitectura, pertenece a la capa del dominio y encapsula la lógica y reglas del negocio mediante modelos y entidades del dominio.
+Lombok Version 1.18.38
 
-## Usecases
+Scalfold Version 3.26.1
 
-Este módulo gradle perteneciente a la capa del dominio, implementa los casos de uso del sistema, define lógica de aplicación y reacciona a las invocaciones desde el módulo de entry points, orquestando los flujos hacia el módulo de entities.
+SpringBoot Version 3.5.4
 
-## Infrastructure
+PgAdmin Version 4
 
-### Helpers
+Principios aplicados
+Principios aplicados
 
-En el apartado de helpers tendremos utilidades generales para los Driven Adapters y Entry Points.
+Separación de capas: Dominio, Aplicación, Infraestructura.
 
-Estas utilidades no están arraigadas a objetos concretos, se realiza el uso de generics para modelar comportamientos
-genéricos de los diferentes objetos de persistencia que puedan existir, este tipo de implementaciones se realizan
-basadas en el patrón de diseño [Unit of Work y Repository](https://medium.com/@krzychukosobudzki/repository-design-pattern-bc490b256006)
+Programación reactiva: Uso de Mono y Flux con operadores map, flatMap, switchIfEmpty
 
-Estas clases no puede existir solas y debe heredarse su compartimiento en los **Driven Adapters**
+Inyección de dependencias para desacoplar componentes
 
-### Driven Adapters
+Logging controlado con SLF4J
 
-Los driven adapter representan implementaciones externas a nuestro sistema, como lo son conexiones a servicios rest,
-soap, bases de datos, lectura de archivos planos, y en concreto cualquier origen y fuente de datos con la que debamos
-interactuar.
+Pruebas unitarias con cobertura superior al 60%
 
-### Entry Points
+Endpoints Disponibles
+Método Endpoint Descripción
 
-Los entry points representan los puntos de entrada de la aplicación o el inicio de los flujos de negocio.
+POST /api/franchises Crea una nueva franquicia
 
-## Application
+POST /api/franchises/{franchiseId}/branches Agrega una nueva sucursal a una franquicia existente
 
-Este módulo es el más externo de la arquitectura, es el encargado de ensamblar los distintos módulos, resolver las dependencias y crear los beans de los casos de use (UseCases) de forma automática, inyectando en éstos instancias concretas de las dependencias declaradas. Además inicia la aplicación (es el único módulo del proyecto donde encontraremos la función “public static void main(String[] args)”.
+POST /api/franchises/{franchiseId}/branches/{branchId}/products Agrega un producto a una sucursal
 
-**Los beans de los casos de uso se disponibilizan automaticamente gracias a un '@ComponentScan' ubicado en esta capa.**
+DELETE /api/franchises/{franchiseId}/branches/{branchId}/products/{productId} Elimina un producto de una sucursal
+
+PUT /api/franchises/{franchiseId}/branches/{branchId}/products/{productId}/stock Actualiza el stock de un producto
+
+GET /api/franchises/{franchiseId}/top-products Obtiene el producto con mayor stock por sucursal de una franquicia
+
+Despliegue Local
+Requisitos previos
+
+Tener instalados:
+
+Java 21
+
+Gradle 9.1
+
+Docker Desktop
+
+PostgreSQL 17.5
+
+🔧 Configuración del entorno
+
+Clonar el repositorio:
+
+git clone https://github.com/michaelrove901/franquiciasScalfold cd franquiciasScaffold
+
+Configurar las variables en application-local.yml (usuario, contraseña, puerto DB)
+
+Compilar y ejecutar Poner en variable local :
+
+gradle clean build gradle bootRun
+
+Acceder a la API:
+
+colleccionPostman.json Importar en Postman y probar EndPoints
+
+Despliegue con Docker
+Construir la imagen:
+
+gradle clean bootJar
+
+cd deployment
+
+docker-compose build
+
+docker-compose up --build
+
+docker ps
+
+API disponible en:
+
+http://localhost:8080
+
+☁️ Despliegue en Producción
+
+En ambiente productivo se utiliza Amazon RDS PostgreSQL, el cual se encuentra apagado por costos En caso de pruebas, avisar para habilitar la instancia temporalmente se debe cambiar el enviroment a prod
+
+# Consideraciones de Diseño
+
+Durante el desarrollo de este proyecto utilize una Arquitectura Hexagonal gracias al scalfold de bancolombia con el fin de mantener una clara separación de responsabilidades entre las capas de dominio, aplicación e infraestructura gracias a esto facilitamos la mantenibilidad del código y permite reemplazar componentes sin afectar la lógica de negocio
+
+Se priorizó el uso de programación reactiva para garantizar una aplicación eficiente, escalable y no bloqueante, aprovechando las capacidades de Spring WebFlux para la construcción de APIs reactivas
+
+El manejo de logs se realizó mediante SLF4J lo que me permitio un registro estructurado y una trazabilidad clara de los eventos dentro del sistema
+
+Se incluyeron pruebas unitarias enfocadas en validar la lógica del dominio y el correcto funcionamiento de los flujos reactivos, asegurando una buena cobertura y confiabilidad en los resultados
+
+El proyecto fue contenedorizado con Docker lo que me facilito su despliegue, ejecución y portabilidad en diferentes entornos
