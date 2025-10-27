@@ -10,7 +10,6 @@ import co.com.bancolombia.r2dbc.repository.ProductDataRepository;
 import co.com.bancolombia.r2dbc.repository.FranchiseDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -37,7 +36,7 @@ public class FranchisePostgresqlAdapter implements FranchiseRepository {
                         branchRepository.findAllByFranchiseId(franchiseData.getId())
                                 .flatMap(branchData ->
                                         productRepository.findAllByBranchId(branchData.getId())
-                                                .map(ProductMapper::toModel)  // <-- usar ProductMapper
+                                                .map(ProductMapper::toModel)
                                                 .collectList()
                                                 .map(products -> BranchMapper.toModel(branchData, products))
                                 )

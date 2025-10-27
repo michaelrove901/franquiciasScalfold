@@ -5,4 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface BranchRepository {
     Mono<Branch> save(Branch branch, Long franchiseId);
+    Mono<Branch> findById(Long idBranch);
+    Mono<Branch> update(Branch branch);
 }

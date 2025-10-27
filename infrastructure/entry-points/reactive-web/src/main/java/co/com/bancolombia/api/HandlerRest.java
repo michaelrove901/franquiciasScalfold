@@ -95,4 +95,43 @@ public class HandlerRest {
                     return ServerResponse.badRequest().bodyValue(e.getMessage());
                 });
     }
+
+    public Mono<ServerResponse> updateNameFrachise(ServerRequest request) {
+        Long franchiseId = Long.valueOf(request.pathVariable("franchiseId"));
+        log.info("Getting id of franchise {}", franchiseId);
+
+        return request.bodyToMono(FranchiseDTO.class)
+                .doOnNext(dto -> log.info("Updating name of franchise '{}' a '{}'", franchiseId, dto.getName()))
+                .flatMap(dto -> franchiseUseCase.updateName(franchiseId, dto.getName()))
+                .doOnNext(franchise -> log.info("Franchise name updated successfully '{}'", franchise.getName()))
+                .flatMap(franchise -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(franchise))
+                .doOnError(e -> log.error("Error updating franchise name '{}' error {}", franchiseId, e.getMessage()))
+                .onErrorResume(e -> ServerResponse.badRequest().bodyValue(e.getMessage()));
+    }
+
+    public Mono<ServerResponse> updateNameBranch(ServerRequest request) {
+        Long branchId = Long.valueOf(request.pathVariable("branchId"));
+        log.info("Getting id of branch {}", branchId);
+
+        return request.bodyToMono(FranchiseDTO.class)
+                .doOnNext(dto -> log.info("Updating name of branch '{}' a '{}'", branchId, dto.getName()))
+                .flatMap(dto -> franchiseUseCase.updateBranch(branchId, dto.getName()))
+                .doOnNext(franchise -> log.info("Branch name updated successfully '{}'", franchise.getName()))
+                .flatMap(franchise -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(franchise))
+                .doOnError(e -> log.error("Error updating branch name '{}' error {}", branchId, e.getMessage()))
+                .onErrorResume(e -> ServerResponse.badRequest().bodyValue(e.getMessage()));
+    }
+
+    public Mono<ServerResponse> updateNameProduct(ServerRequest request) {
+        Long productId = Long.valueOf(request.pathVariable("productId"));
+        log.info("Getting id of product {}", productId);
+
+        return request.bodyToMono(FranchiseDTO.class)
+                .doOnNext(dto -> log.info("Updating name of product '{}' a '{}'", productId, dto.getName()))
+                .flatMap(dto -> franchiseUseCase.updateProduct(productId, dto.getName()))
+                .doOnNext(product -> log.info("Product name updated successfully '{}'", product.getName()))
+                .flatMap(product -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(product))
+                .doOnError(e -> log.error("Error updating product name '{}' error {}", productId, e.getMessage()))
+                .onErrorResume(e -> ServerResponse.badRequest().bodyValue(e.getMessage()));
+    }
 }

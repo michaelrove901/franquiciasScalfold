@@ -22,16 +22,14 @@ public class UseCasesConfigTest {
     void testUseCaseBeansExist() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class)) {
 
-            // Obtenemos el UseCase
             FranchiseUseCase useCase = context.getBean(FranchiseUseCase.class);
 
-            // Validamos que exista
             assertNotNull(useCase, "FranchiseUseCase bean should exist");
         }
     }
 
     @Configuration
-    @Import(UseCasesConfig.class) // Tu configuración real de UseCases
+    @Import(UseCasesConfig.class)
     static class TestConfig {
 
         @Bean

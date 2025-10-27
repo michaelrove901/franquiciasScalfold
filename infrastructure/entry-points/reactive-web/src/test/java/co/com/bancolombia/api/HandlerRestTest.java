@@ -35,11 +35,9 @@ class HandlerRestTest {
         response.setId(1L);
         response.setName("Test Franchise");
 
-        // Mock del ServerRequest
         ServerRequest request = mock(ServerRequest.class);
         when(request.bodyToMono(FranchiseDTO.class)).thenReturn(Mono.just(new FranchiseDTO("Test Franchise")));
 
-        // Mock del handler
         when(handlerRest.createFranchise(request)).thenReturn(ServerResponse.ok().body(fromValue(response)));
 
         Mono<ServerResponse> result = handlerRest.createFranchise(request);
@@ -58,11 +56,9 @@ class HandlerRestTest {
         response.setId(1L);
         response.setName("Test Franchise");
 
-        // Mock del ServerRequest
         ServerRequest request = mock(ServerRequest.class);
         when(request.bodyToMono(BranchDTO.class)).thenReturn(Mono.just(new BranchDTO("Test Branch")));
 
-        // Mock del handler
         when(handlerRest.addBranch(request)).thenReturn(ServerResponse.ok().body(fromValue(response)));
 
         Mono<ServerResponse> result = handlerRest.addBranch(request);
@@ -104,13 +100,11 @@ class HandlerRestTest {
         response.setId(1L);
         response.setName("Test Franchise");
 
-        // Mock del ServerRequest
         ServerRequest request = mock(ServerRequest.class);
         when(request.pathVariable("franchiseId")).thenReturn("1");
         when(request.pathVariable("branchId")).thenReturn("1");
         when(request.pathVariable("productId")).thenReturn("1");
 
-        // Mock del handler
         when(handlerRest.removeProduct(request)).thenReturn(ServerResponse.ok().body(fromValue(response)));
 
         Mono<ServerResponse> result = handlerRest.removeProduct(request);
@@ -136,7 +130,6 @@ class HandlerRestTest {
         when(request.pathVariable("productId")).thenReturn("1");
         when(request.bodyToMono(StockDTO.class)).thenReturn(Mono.just(new StockDTO(20)));
 
-        // Mock del handler
         when(handlerRest.updateStock(request)).thenReturn(ServerResponse.ok().body(fromValue(response)));
 
         Mono<ServerResponse> result = handlerRest.updateStock(request);
@@ -155,7 +148,6 @@ class HandlerRestTest {
         response.setId(1L);
         response.setName("Test Franchise");
 
-        // Mock del ServerRequest
         ServerRequest request = mock(ServerRequest.class);
         when(request.pathVariable("franchiseId")).thenReturn("1");
 

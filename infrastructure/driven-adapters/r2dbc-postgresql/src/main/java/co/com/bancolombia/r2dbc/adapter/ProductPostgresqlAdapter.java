@@ -7,7 +7,6 @@ import co.com.bancolombia.r2dbc.mapper.ProductMapper;
 import co.com.bancolombia.r2dbc.repository.ProductDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -28,11 +27,22 @@ public class ProductPostgresqlAdapter implements ProductRepository {
                 .map(ProductMapper::toModel);
     }
 
-
-
     @Override
     public Mono<Void> deleteById(Long id) {
         return productDataRepository.deleteById(id);
+    }
+
+    @Override
+    public Mono<Product> update(Product product) {
+        System.out.println("SQL UPDATE products: SET name = " + product.getName() + " WHERE id = " + product.getId());
+        return productDataRepository.updateProductByName(product.getName(), product.getId())
+                .map(ProductMapper::toModel);
+    }
+
+    @Override
+    public Mono<Product> findById(Long id) {
+        return productDataRepository.findById(id)
+                .map(ProductMapper::toModel);
     }
 
 

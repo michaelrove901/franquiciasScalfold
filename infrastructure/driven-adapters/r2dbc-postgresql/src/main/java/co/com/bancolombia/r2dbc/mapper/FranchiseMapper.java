@@ -2,9 +2,7 @@ package co.com.bancolombia.r2dbc.mapper;
 
 import co.com.bancolombia.model.branch.Branch;
 import co.com.bancolombia.model.franchise.Franchise;
-import co.com.bancolombia.model.product.Product;
 import co.com.bancolombia.r2dbc.entity.FranchiseData;
-import co.com.bancolombia.r2dbc.entity.ProductData;
 
 import java.util.List;
 

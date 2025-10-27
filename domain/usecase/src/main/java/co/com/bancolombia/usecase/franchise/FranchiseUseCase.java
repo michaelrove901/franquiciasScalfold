@@ -46,7 +46,6 @@ public class FranchiseUseCase {
                                     .name(productName)
                                     .stock(stock)
                                     .build();
-                            // Guardamos en DB y agregamos al branch
                             return productRepository.save(product, branchId)
                                     .flatMap(savedProduct -> {
                                         branch.getProducts().add(savedProduct);
@@ -109,5 +108,34 @@ public class FranchiseUseCase {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException(ERROR_PRODUCT_NOT_FOUND)));
     }
 
-    public record ProductWithBranch(Long branchId, String branchName, Product product) {}
+    public Mono<Franchise> updateName(Long idFranchise, String name) {
+
+        return franchiseRepository.findById(idFranchise)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException(ERROR_FRANCHISE_NOT_FOUND)))
+                .flatMap(franchise -> {
+                    franchise.setName(name);
+                    return franchiseRepository.update(franchise);
+                });
+    }
+
+    public Mono<Branch> updateBranch(Long idBranch, String name) {
+        return branchRepository.findById(idBranch)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException(ERROR_BRANCH_NOT_FOUND)))
+                .flatMap(branch -> {
+                    branch.setName(name);
+                    return branchRepository.update(branch);
+                });
+    }
+
+    public Mono<Product> updateProduct(Long idProduct, String name) {
+        return productRepository.findById(idProduct)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException(ERROR_PRODUCT_NOT_FOUND)))
+                .flatMap(product -> {
+                    product.setName(name);
+                    return productRepository.update(product);
+                });
+    }
+
+    public record ProductWithBranch(Long branchId, String branchName, Product product) {
+    }
 }
