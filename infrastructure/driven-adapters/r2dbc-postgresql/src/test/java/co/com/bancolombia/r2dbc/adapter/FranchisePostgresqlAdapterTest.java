@@ -1,7 +1,5 @@
 package co.com.bancolombia.r2dbc.adapter;
 
-import co.com.bancolombia.model.branch.Branch;
-import co.com.bancolombia.model.product.Product;
 import co.com.bancolombia.model.franchise.Franchise;
 import co.com.bancolombia.r2dbc.entity.BranchData;
 import co.com.bancolombia.r2dbc.entity.FranchiseData;
@@ -18,7 +16,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -112,6 +109,53 @@ class FranchisePostgresqlAdapterTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(f -> f.getId().equals(2L) && f.getName().equals("Franquicia Update"))
+                .verifyComplete();
+    }
+
+    @Test
+    void findById_franchiseNotFound_shouldReturnEmpty() {
+        when(franchiseDataRepository.findById(99L)).thenReturn(Mono.empty());
+
+        StepVerifier.create(adapter.findById(99L))
+                .verifyComplete();
+    }
+
+    @Test
+    void findById_noBranches_shouldReturnFranchiseWithEmptyBranches() {
+        Long franchiseId = 1L;
+        FranchiseData franchiseData = new FranchiseData();
+        franchiseData.setId(franchiseId);
+        franchiseData.setName("Franquicia Test");
+
+        when(franchiseDataRepository.findById(franchiseId)).thenReturn(Mono.just(franchiseData));
+        when(branchRepository.findAllByFranchiseId(franchiseId)).thenReturn(Flux.empty());
+
+        StepVerifier.create(adapter.findById(franchiseId))
+                .expectNextMatches(f -> f.getId().equals(franchiseId) && f.getBranches().isEmpty())
+                .verifyComplete();
+    }
+
+    @Test
+    void findById_branchWithoutProducts_shouldReturnBranchWithEmptyProducts() {
+        Long franchiseId = 1L;
+        FranchiseData franchiseData = new FranchiseData();
+        franchiseData.setId(franchiseId);
+        franchiseData.setName("Franquicia Test");
+
+        BranchData branchData = new BranchData();
+        branchData.setId(10L);
+        branchData.setName("Sucursal A");
+        branchData.setFranchiseId(franchiseId);
+
+        when(franchiseDataRepository.findById(franchiseId)).thenReturn(Mono.just(franchiseData));
+        when(branchRepository.findAllByFranchiseId(franchiseId)).thenReturn(Flux.just(branchData));
+        when(productRepository.findAllByBranchId(branchData.getId())).thenReturn(Flux.empty());
+
+        StepVerifier.create(adapter.findById(franchiseId))
+                .expectNextMatches(f ->
+                        f.getBranches().size() == 1 &&
+                                f.getBranches().get(0).getProducts().isEmpty()
+                )
                 .verifyComplete();
     }
 }

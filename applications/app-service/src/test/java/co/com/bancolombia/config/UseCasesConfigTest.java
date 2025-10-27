@@ -59,6 +59,16 @@ public class UseCasesConfigTest {
                 public Mono<Branch> save(Branch branch, Long franchiseId) {
                     return Mono.empty();
                 }
+
+                @Override
+                public Mono<Branch> findById(Long idBranch) {
+                    return null;
+                }
+
+                @Override
+                public Mono<Branch> update(Branch branch) {
+                    return null;
+                }
             };
         }
 
@@ -73,6 +83,16 @@ public class UseCasesConfigTest {
 
                 @Override
                 public Mono<Void> deleteById(Long id) {
+                    return null;
+                }
+
+                @Override
+                public Mono<Product> update(Product product) {
+                    return null;
+                }
+
+                @Override
+                public Mono<Product> findById(Long id) {
                     return null;
                 }
             };

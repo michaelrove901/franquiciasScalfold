@@ -63,4 +63,66 @@ class ProductPostgresqlAdapterTest {
         StepVerifier.create(result)
                 .verifyComplete();
     }
+    @Test
+    void update_shouldReturnUpdatedProduct() {
+        Product product = Product.builder()
+                .id(1L)
+                .name("Producto Update")
+                .stock(20)
+                .build();
+
+        ProductData updatedData = new ProductData();
+        updatedData.setId(1L);
+        updatedData.setName("Producto Update");
+        updatedData.setStock(20);
+
+        when(productDataRepository.updateProductByName(product.getName(), product.getId()))
+                .thenReturn(Mono.just(updatedData));
+
+        StepVerifier.create(adapter.update(product))
+                .expectNextMatches(p -> p.getId().equals(1L) &&
+                        p.getName().equals("Producto Update") &&
+                        p.getStock() == 20)
+                .verifyComplete();
+    }
+
+    @Test
+    void update_productNotFound_shouldReturnEmpty() {
+        Product product = Product.builder()
+                .id(99L)
+                .name("Nonexistent Product")
+                .stock(10)
+                .build();
+
+        when(productDataRepository.updateProductByName(product.getName(), product.getId()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(adapter.update(product))
+                .verifyComplete();
+    }
+
+    @Test
+    void findById_shouldReturnProduct() {
+        ProductData data = new ProductData();
+        data.setId(1L);
+        data.setName("Producto X");
+        data.setStock(50);
+        data.setBranchId(100L);
+
+        when(productDataRepository.findById(1L)).thenReturn(Mono.just(data));
+
+        StepVerifier.create(adapter.findById(1L))
+                .expectNextMatches(p -> p.getId().equals(1L) &&
+                        p.getName().equals("Producto X") &&
+                        p.getStock() == 50)
+                .verifyComplete();
+    }
+
+    @Test
+    void findById_productNotFound_shouldReturnEmpty() {
+        when(productDataRepository.findById(99L)).thenReturn(Mono.empty());
+
+        StepVerifier.create(adapter.findById(99L))
+                .verifyComplete();
+    }
 }

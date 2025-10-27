@@ -146,5 +146,98 @@ class FranchiseUseCaseTest {
                         throwable.getMessage().equals("Branch not found"))
                 .verify();
     }
+    @Test
+    void updateName_shouldUpdateFranchiseName() {
+        Franchise franchise = new Franchise(1L, "Old Name", new ArrayList<>());
+        when(franchiseRepository.findById(1L)).thenReturn(Mono.just(franchise));
+        when(franchiseRepository.update(any())).thenReturn(Mono.just(franchise));
 
+        StepVerifier.create(franchiseUseCase.updateName(1L, "New Name"))
+                .expectNextMatches(f -> f.getName().equals("New Name"))
+                .verifyComplete();
+
+        verify(franchiseRepository, times(1)).update(any());
+    }
+
+    @Test
+    void updateName_franchiseNotFound_shouldError() {
+        when(franchiseRepository.findById(99L)).thenReturn(Mono.empty());
+
+        StepVerifier.create(franchiseUseCase.updateName(99L, "Name"))
+                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                        e.getMessage().equals("Franchise not found"))
+                .verify();
+    }
+
+    @Test
+    void updateBranch_shouldUpdateBranchName() {
+        Branch branch = new Branch(1L, "Old Branch", new ArrayList<>());
+        when(branchRepository.findById(1L)).thenReturn(Mono.just(branch));
+        when(branchRepository.update(any())).thenReturn(Mono.just(branch));
+
+        StepVerifier.create(franchiseUseCase.updateBranch(1L, "New Branch"))
+                .expectNextMatches(b -> b.getName().equals("New Branch"))
+                .verifyComplete();
+
+        verify(branchRepository, times(1)).update(any());
+    }
+
+    @Test
+    void updateBranch_branchNotFound_shouldError() {
+        when(branchRepository.findById(99L)).thenReturn(Mono.empty());
+
+        StepVerifier.create(franchiseUseCase.updateBranch(99L, "Name"))
+                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                        e.getMessage().equals("Branch not found"))
+                .verify();
+    }
+
+    @Test
+    void updateProduct_shouldUpdateProductName() {
+        Product product = new Product(1L, "Old Product", 10);
+        when(productRepository.findById(1L)).thenReturn(Mono.just(product));
+        when(productRepository.update(any())).thenReturn(Mono.just(product));
+
+        StepVerifier.create(franchiseUseCase.updateProduct(1L, "New Product"))
+                .expectNextMatches(p -> p.getName().equals("New Product"))
+                .verifyComplete();
+
+        verify(productRepository, times(1)).update(any());
+    }
+
+    @Test
+    void updateProduct_productNotFound_shouldError() {
+        when(productRepository.findById(99L)).thenReturn(Mono.empty());
+
+        StepVerifier.create(franchiseUseCase.updateProduct(99L, "Name"))
+                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                        e.getMessage().equals("Product not found"))
+                .verify();
+    }
+
+    @Test
+    void removeProduct_productNotFound_shouldError() {
+        Branch branch = new Branch(1L, "Branch1", new ArrayList<>());
+        Franchise franchise = new Franchise(1L, "F1", new ArrayList<>(java.util.List.of(branch)));
+        when(franchiseRepository.findById(1L)).thenReturn(Mono.just(franchise));
+
+        StepVerifier.create(franchiseUseCase.removeProduct(1L, 1L, 99L))
+                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                        e.getMessage().equals("Product not found"))
+                .verify();
+    }
+
+    @Test
+    void updateProductStock_productNotFound_shouldError() {
+        Branch branch = new Branch(1L, "Branch1", new ArrayList<>());
+        Franchise franchise = new Franchise(1L, "F1", new ArrayList<>(java.util.List.of(branch)));
+        when(franchiseRepository.findById(1L)).thenReturn(Mono.just(franchise));
+
+        StepVerifier.create(franchiseUseCase.updateProductStock(1L, 1L, 99L, 50))
+                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                        e.getMessage().equals("Product not found"))
+                .verify();
+    }
 }
+
+
